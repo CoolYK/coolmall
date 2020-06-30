@@ -1,9 +1,11 @@
 package com.coolyk.coolmall.mapper;
 
 import com.coolyk.coolmall.entity.TbBrand;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TbBrandMapper {
     int deleteByPrimaryKey(Long id);
 

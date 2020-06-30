@@ -1,6 +1,9 @@
 package com.coolyk.coolmall.entity;
 
-public class TbBrand {
+import java.io.Serializable;
+
+public class TbBrand implements Serializable {
+
     private Long id;
 
     private String name;
