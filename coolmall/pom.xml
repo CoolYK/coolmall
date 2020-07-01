@@ -17,6 +17,7 @@
         <module>coolmall-sellgoods-interface</module>
         <module>coolmall-sellgoods-service</module>
         <module>coolmall-sellgoods-web</module>
+        <module>coolmall-manage-web</module>
     </modules>
 
     <groupId>com.coolyk</groupId>
@@ -29,8 +30,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <mybatis.version></mybatis.version>
         <mybatis.springboot.version>2.1.0</mybatis.springboot.version>
+        <pagehelper.version>1.2.13</pagehelper.version>
         <dubbo.version>2.7.3</dubbo.version>
         <lombok.version>1.18.12</lombok.version>
         <mysql-connector.version>8.0.20</mysql-connector.version>
@@ -47,6 +48,21 @@
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.springboot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mybatis.spring.boot</groupId>
+                        <artifactId>mybatis-spring-boot-starter</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!--dubbo相关-->
@@ -115,6 +131,8 @@
                 <artifactId>zkclient</artifactId>
                 <version>0.10</version>
             </dependency>
+
+
         </dependencies>
 
 
