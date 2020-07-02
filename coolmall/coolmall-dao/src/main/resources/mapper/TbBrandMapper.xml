@@ -22,6 +22,21 @@
     <include refid="Base_Column_List" />
     from tb_brand
   </select>
+  <select id="searchBrand" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_brand
+    <if test="name != null or firstChar != null ">
+      <where>
+        <if test="name != null">
+            and `name` like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="firstChar != null">
+          and 'firstChar'=#{firstChar}
+        </if>
+      </where>
+    </if>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tb_brand
     where id = #{id,jdbcType=BIGINT}

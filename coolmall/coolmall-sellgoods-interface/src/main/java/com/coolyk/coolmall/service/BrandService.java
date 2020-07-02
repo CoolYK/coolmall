@@ -16,4 +16,12 @@ public interface BrandService {
     PageResult findPage(int pageNum, int pageSize);
 
     void addBrand(TbBrand brand);
+
+    void updateBrand(TbBrand brand);
+
+    TbBrand findOne(Long id);
+
+    void delete(Long[] ids);
+
+    PageResult searchBrands(String name, String firstChar, int pageNum, int pageSize);
 }

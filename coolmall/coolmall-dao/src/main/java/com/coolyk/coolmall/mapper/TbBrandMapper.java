@@ -1,6 +1,7 @@
 package com.coolyk.coolmall.mapper;
 
 import com.coolyk.coolmall.entity.TbBrand;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface TbBrandMapper {
     int updateByPrimaryKey(TbBrand record);
 
     List<TbBrand> findAll();
+
+    List<TbBrand> searchBrand(@Param("name") String name, @Param("firstChar") String firstChar);
 }

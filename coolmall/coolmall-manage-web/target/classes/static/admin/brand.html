@@ -18,6 +18,7 @@
 	<script>
 		var app = angular.module("coolmall", ['pagination']);
 		app.controller("brandController", function ($scope, $http) {
+			$scope.isSearch = false;
 			$scope.findPage = function (page, size) {
 				$http.get("/brand/brandList?page=" + page + "&size=" + size)
 					.success(function (response) {
@@ -27,11 +28,25 @@
 			}
 
 			$scope.reloadList = function () {
-				$scope.findPage( $scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				if ($scope.isSearch) {
+					$scope.searchBrands();
+				} else {
+					$scope.findPage( $scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				}
+			}
+
+			$scope.resetBrand= function() {
+				$scope.editBrand = {};
 			}
 
 			$scope.save = function() {
-				$http.post("/brand/add", $scope.brand).success(
+				var methodname = "add";
+
+				if ($scope.editBrand.id != null) {
+					methodname = "update";
+				}
+
+				$http.post("/brand/" + methodname, $scope.editBrand).success(
 						function (response) {
 							if (response.success) {
 								$scope.reloadList();
@@ -52,6 +67,37 @@
 				}
 			};
 
+			$scope.selectIds = [];
+			$scope.updateSelection = function($event, id) {
+				if ($event.target.checked) {
+					$scope.selectIds.push(id);
+				} else {
+					var idx = $scope.selectIds.indexOf(id);
+					$scope.selectIds.splice(idx);
+				}
+			}
+
+			$scope.deleteBrands = function () {
+				$http.get("/brand/delete?ids=" + $scope.selectIds).success(
+						function (response) {
+							if (response.success) {
+								$scope.reloadList();
+							} else {
+								alert(response.message);
+							}
+						}
+				)
+			}
+
+			$scope.searchBrands = function () {
+				var page = $scope.paginationConf.currentPage;
+				var size = $scope.paginationConf.itemsPerPage;
+				$http.post("/brand/search?page=" + page + "&size=" + size, $scope.searchBrand)
+						.success(function (response) {
+							$scope.brandList = response.rows;
+							$scope.paginationConf.totalItems=response.total;
+						});
+			}
 		})
 	</script>
     
@@ -71,15 +117,16 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
-                                        <button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>           
+                                        <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="resetBrand()"><i class="fa fa-file-o"></i> 新建</button>
+                                        <button type="button" class="btn btn-default" title="删除" ng-click="deleteBrands()"><i class="fa fa-trash-o" ></i> 删除</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-							                                         
+									品牌名称<input ng-model="searchBrand.name">品牌首字母<input ng-model="searchBrand.firstChar">
+									<button class="btn btn-default" title="查询" ng-click="searchBrands()">查询</button>
                                 </div>
                             </div>
                             <!--工具栏/-->
@@ -99,12 +146,12 @@
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="brand in brandList">
-			                              <td><input  type="checkbox" ></td>			                              
+			                              <td><input  type="checkbox" ng-click="updateSelection($event, brand.id)" ></td>
 				                          <td>{{brand.id}}</td>
 									      <td>{{brand.name}}</td>
 		                                  <td>{{brand.firstChar}}</td>
 		                                  <td class="text-center">                                           
-		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"  >修改</button>
+		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" ng-click="find(brand)" >修改</button>
 		                                  </td>
 			                          </tr>
 <!--									  <tr>-->
@@ -151,11 +198,11 @@
 			<table class="table table-bordered table-striped"  width="800px">
 		      	<tr>
 		      		<td>品牌名称</td>
-		      		<td><input  class="form-control" placeholder="品牌名称" ng-model="brand.name" >  </td>
+		      		<td><input  class="form-control" placeholder="品牌名称" ng-model="editBrand.name" >  </td>
 		      	</tr>		      	
 		      	<tr>
 		      		<td>首字母</td>
-		      		<td><input  class="form-control" placeholder="首字母" ng-model="brand.firstChar">  </td>
+		      		<td><input  class="form-control" placeholder="首字母" ng-model="editBrand.firstChar">  </td>
 		      	</tr>		      	
 			 </table>				
 		</div>
