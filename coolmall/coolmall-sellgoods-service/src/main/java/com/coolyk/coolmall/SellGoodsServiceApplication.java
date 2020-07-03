@@ -8,9 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableDubbo
 @SpringBootApplication
 @MapperScan("com.coolyk.coolmall.mapper")
-public class SellGoodsApplication {
+public class SellGoodsServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SellGoodsApplication.class, args);
+        SpringApplication.run(SellGoodsServiceApplication.class, args);
     }
 }

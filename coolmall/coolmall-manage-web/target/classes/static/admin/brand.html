@@ -14,95 +14,13 @@
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script src="../plugins/angularjs/angular.min.js"></script>
 	<script src="../plugins/angularjs/pagination.js"></script>
-
-	<script>
-		var app = angular.module("coolmall", ['pagination']);
-		app.controller("brandController", function ($scope, $http) {
-			$scope.isSearch = false;
-			$scope.findPage = function (page, size) {
-				$http.get("/brand/brandList?page=" + page + "&size=" + size)
-					.success(function (response) {
-						$scope.brandList = response.rows;
-						$scope.paginationConf.totalItems=response.total;
-					});
-			}
-
-			$scope.reloadList = function () {
-				if ($scope.isSearch) {
-					$scope.searchBrands();
-				} else {
-					$scope.findPage( $scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
-				}
-			}
-
-			$scope.resetBrand= function() {
-				$scope.editBrand = {};
-			}
-
-			$scope.save = function() {
-				var methodname = "add";
-
-				if ($scope.editBrand.id != null) {
-					methodname = "update";
-				}
-
-				$http.post("/brand/" + methodname, $scope.editBrand).success(
-						function (response) {
-							if (response.success) {
-								$scope.reloadList();
-							} else {
-								alert(response.message);
-							}
-						}
-				)
-			}
-
-			$scope.paginationConf = {
-				currentPage: 1,
-				totalItems: 10,
-				itemsPerPage: 10,
-				perPageOptions: [10, 20, 30, 40, 50],
-				onChange: function(){
-					$scope.reloadList();//重新加载
-				}
-			};
-
-			$scope.selectIds = [];
-			$scope.updateSelection = function($event, id) {
-				if ($event.target.checked) {
-					$scope.selectIds.push(id);
-				} else {
-					var idx = $scope.selectIds.indexOf(id);
-					$scope.selectIds.splice(idx);
-				}
-			}
-
-			$scope.deleteBrands = function () {
-				$http.get("/brand/delete?ids=" + $scope.selectIds).success(
-						function (response) {
-							if (response.success) {
-								$scope.reloadList();
-							} else {
-								alert(response.message);
-							}
-						}
-				)
-			}
-
-			$scope.searchBrands = function () {
-				var page = $scope.paginationConf.currentPage;
-				var size = $scope.paginationConf.itemsPerPage;
-				$http.post("/brand/search?page=" + page + "&size=" + size, $scope.searchBrand)
-						.success(function (response) {
-							$scope.brandList = response.rows;
-							$scope.paginationConf.totalItems=response.total;
-						});
-			}
-		})
-	</script>
+	<script src="../js/base_pagination.js"></script>
+	<script src="../js/service/brandService.js"></script>
+	<script src="../js/controller/baseController.js"></script>
+	<script src="../js/controller/brandController.js"></script>
     
 </head>
-<body class="hold-transition skin-red sidebar-mini" ng-app="coolmall" ng-controller="brandController" ng-init="findAll()">
+<body class="hold-transition skin-red sidebar-mini" ng-app="coolmall" ng-controller="brandController" >
   <!-- .box-body -->
                     <div class="box-header with-border">
                         <h3 class="box-title">品牌管理</h3>

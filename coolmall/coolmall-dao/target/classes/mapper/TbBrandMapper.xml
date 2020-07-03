@@ -26,16 +26,15 @@
     select
     <include refid="Base_Column_List" />
     from tb_brand
-    <if test="name != null or firstChar != null ">
-      <where>
-        <if test="name != null">
-            and `name` like CONCAT('%', #{name}, '%')
-        </if>
-        <if test="firstChar != null">
-          and 'firstChar'=#{firstChar}
-        </if>
-      </where>
-    </if>
+    where 1=1
+    <choose>
+      <when test="name != null and name != ''">
+        and `name` like CONCAT('%', #{name}, '%')
+      </when>
+      <when test="firstChar != null and firstChar != ''">
+        and 'firstChar'=#{firstChar}
+      </when>
+    </choose>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tb_brand
